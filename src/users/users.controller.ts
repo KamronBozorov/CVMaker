@@ -7,28 +7,29 @@ import {
   Param,
   Delete,
   UseGuards,
-} from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+  ParseIntPipe,
+} from "@nestjs/common";
+import { UsersService } from "./users.service";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
-} from '@nestjs/swagger';
-import { User } from './models/user.model';
-import { RoleGuard } from 'src/common/guards/role.guard';
-import { Roles } from 'src/common/decorators/role.decorator';
-import { AuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { SelfGuard } from 'src/common/guards/self.guard';
+} from "@nestjs/swagger";
+import { User } from "./models/user.model";
+import { RoleGuard } from "src/common/guards/role.guard";
+import { Roles } from "src/common/decorators/role.decorator";
+import { AuthGuard } from "src/common/guards/jwt-auth.guard";
+import { SelfGuard } from "src/common/guards/self.guard";
 
-@Controller('users')
+@Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiOperation({
-    summary: 'User yaratadi',
+    summary: "User yaratadi",
   })
   @ApiCreatedResponse({
     description: "Yangi yaratilgan user id'si",
@@ -39,16 +40,16 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Roles('admin', 'superadmin')
-  @UseGuards(RoleGuard)
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth('access_token')
+  // @Roles("admin", "superadmin")
+  // @UseGuards(RoleGuard)
+  // @UseGuards(AuthGuard)
+  // @ApiBearerAuth("access_token")
   @ApiOperation({
-    summary: 'Userlarni oladi',
+    summary: "Userlarni oladi",
   })
   @ApiOkResponse({
-    example: 'asdadadsa',
-    description: 'asdasda',
+    example: "asdadadsa",
+    description: "asdasda",
   })
   @Get()
   findAll() {
@@ -56,20 +57,20 @@ export class UsersController {
   }
 
   @ApiOperation({
-    summary: 'Userni ID b-n oladi',
+    summary: "Userni ID b-n oladi",
   })
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":id")
+  findOne(@Param("id", ParseIntPipe) id: string): any {
     return this.usersService.findOne(+id);
   }
 
   @UseGuards(SelfGuard)
   @UseGuards(AuthGuard)
   @ApiOperation({
-    summary: 'Userni yangilaydi',
+    summary: "Userni yangilaydi",
   })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
@@ -78,8 +79,8 @@ export class UsersController {
   @ApiOperation({
     summary: "Userni o'chiradi",
   })
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.usersService.remove(+id);
   }
 }
